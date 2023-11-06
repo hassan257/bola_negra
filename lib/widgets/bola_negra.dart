@@ -21,8 +21,15 @@ class _BolaNegraState extends State<BolaNegra> {
     // "Yo creo que no",
     "I don't think so",
     // "Probablemente si"
-    "Probably yes"
+    "Probably yes",
+    // "Puede que en un futuro"
+    "Maybe in a future"
   ];
+
+  int _times = 0;
+
+  final interstitialUnit = InterstitialUnit();
+  InterstitialAd? _interstitialAd;
 
   T getRandomElement<T>(List<T> list) {
     final random = Random();
@@ -35,11 +42,22 @@ class _BolaNegraState extends State<BolaNegra> {
   @override
   void initState() {
     super.initState();
+    interstitialUnit.loadAd();
+    
   }
 
   void _adivinar(){
     setState(() {
       respuestaActual = getRandomElement(respuestas);
+      _times++;
+      if(_times == 5){
+        _times = 0;
+        _interstitialAd = interstitialUnit.interstitialAd;
+        if(_interstitialAd != null){
+          _interstitialAd!.show();
+          interstitialUnit.loadAd();
+        }
+      }
     });
   }
 

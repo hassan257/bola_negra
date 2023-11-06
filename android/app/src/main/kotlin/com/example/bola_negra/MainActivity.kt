@@ -1,4 +1,4 @@
-package com.example.bola_negra
+package com.hassansystems.bola_negra
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,7 +1,12 @@
+import 'package:bola_negra/widgets/admob_widgets.dart';
 import 'package:bola_negra/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  AdMobWidgets.instance(androidBannerAdUnitId: "ca-app-pub-6473425324446369/6678421588", androidInterstitialAdUnitId: "ca-app-pub-6473425324446369/4057510566");
+  await MobileAds.instance.initialize();
   runApp(const MainApp());
 }
 
@@ -24,6 +29,7 @@ class MainApp extends StatelessWidget {
               ),),
               const Spacer(),
               const BolaNegra(),
+              const SizedBox(height: 15,),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -35,7 +41,8 @@ class MainApp extends StatelessWidget {
                   )
                 ],
               ),
-              const Spacer()
+              const Spacer(),
+              const BannerInlineWidget()
             ],
           ),
         ),
