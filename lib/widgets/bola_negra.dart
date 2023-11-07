@@ -1,31 +1,16 @@
 part of 'widgets.dart';
+
 class BolaNegra extends StatefulWidget {
-  const BolaNegra({Key? key}) : super(key: key);
+  const BolaNegra({Key? key, required this.respuestas, required this.thinking})
+      : super(key: key);
+  final List<String> respuestas;
+  final String thinking;
 
   @override
   State<BolaNegra> createState() => _BolaNegraState();
 }
 
 class _BolaNegraState extends State<BolaNegra> {
-  final List<String> respuestas = [
-    // "El futuro es brillante",
-    "The future is bright",
-    // "Tu suerte está a punto de cambiar",
-    "Your luck is about to change",
-    // "Sigue tus sueños",
-    "Follow your dreams",
-    // "No te rindas",
-    "Don't give up",
-    // "Todo va a salir bien",
-    "Everything is going to be Ok",
-    // "Yo creo que no",
-    "I don't think so",
-    // "Probablemente si"
-    "Probably yes",
-    // "Puede que en un futuro"
-    "Maybe in a future"
-  ];
-
   int _times = 0;
 
   final interstitialUnit = InterstitialUnit();
@@ -43,22 +28,29 @@ class _BolaNegraState extends State<BolaNegra> {
   void initState() {
     super.initState();
     interstitialUnit.loadAd();
-    
   }
 
-  void _adivinar(){
+  void _adivinar() {
     setState(() {
-      respuestaActual = getRandomElement(respuestas);
-      _times++;
-      if(_times == 5){
-        _times = 0;
-        _interstitialAd = interstitialUnit.interstitialAd;
-        if(_interstitialAd != null){
-          _interstitialAd!.show();
-          interstitialUnit.loadAd();
-        }
-      }
+      respuestaActual = widget.thinking;
     });
+    Future.delayed(
+      const Duration(seconds: 1),
+      () {
+        setState(() {
+          _times++;
+          if (_times == 5) {
+            _times = 0;
+            _interstitialAd = interstitialUnit.interstitialAd;
+            if (_interstitialAd != null) {
+              _interstitialAd!.show();
+              interstitialUnit.loadAd();
+            }
+          }
+          respuestaActual = getRandomElement(widget.respuestas);
+        });
+      },
+    );
   }
 
   @override
@@ -69,10 +61,8 @@ class _BolaNegraState extends State<BolaNegra> {
       onHorizontalDragEnd: (_) => _adivinar(),
       child: Container(
         constraints: const BoxConstraints(maxHeight: 300, maxWidth: 300),
-        decoration: const BoxDecoration(
-          color: Colors.black,
-          shape: BoxShape.circle
-        ),
+        decoration:
+            const BoxDecoration(color: Colors.black, shape: BoxShape.circle),
         child: Center(
           child: _CirculoInterno(respuestaActual: respuestaActual),
         ),
@@ -97,26 +87,24 @@ class _CirculoInterno extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       child: Center(
-        child: respuestaActual == null 
-        ? const Text(
-          '8',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 70,
-            fontWeight: FontWeight.bold
-          ),
-        ) 
-        : Text(
-          respuestaActual!,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 20,
-          ),
-        ),
+        child: respuestaActual == null
+            ? const Text(
+                '8',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 70,
+                    fontWeight: FontWeight.bold),
+              )
+            : Text(
+                respuestaActual!,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.blue.shade900,
+                  fontSize: 20,
+                ),
+              ),
       ),
     );
   }
 }
-
